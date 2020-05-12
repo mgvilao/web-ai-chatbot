@@ -4,6 +4,10 @@
 const express = require("express");
 const app = express();
 
+require("dotenv").config();
+const APIAI_TOKEN = process.env.APIAI_TOKEN;
+const APIAI_SESSION_ID = process.env.APIAI_SESSION_ID;
+
 app.use(express.static(__dirname + "/views"));
 app.use(express.static(__dirname + "/public"));
 
