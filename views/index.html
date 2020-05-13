@@ -1,10 +1,34 @@
 <html lang="en">
-  <head> </head>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content="Simple AI Bot with Web Speech API" />
+    <meta name="author" content="Miguel Vilao @mgvilao" />
+
+    <title>Simple AI Bot with Web Speech API</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
 
   <body>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js"></script>
-    <script src="js/script.js"></script>
+    <section>
+      <h1>VilaoBot, a simple AI Bot</h1>
+      <h2>with Speech API</h2>
 
-    <button>Talk</button>
+      <button><i class="fa fa-microphone"></i></button>
+
+      <div>
+        <p>You said: <em class="output-you">...</em></p>
+        <p>VilaoBot said: <em class="output-bot">...</em></p>
+      </div>
+    </section>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/script.js"></script>
   </body>
 </html>
