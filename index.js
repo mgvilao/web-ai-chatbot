@@ -1,17 +1,19 @@
 // instantiate express and set the app to look for the html and css source files
 // set the app to listen to the server on port 5000
 // set index.html as homepage
+"use strict";
+
 const express = require("express");
 const app = express();
 
-//require("dotenv").config();
+require("dotenv").config();
 const APIAI_TOKEN = process.env.APIAI_TOKEN;
 const APIAI_SESSION_ID = process.env.APIAI_SESSION_ID;
 
 app.use(express.static(__dirname + "/views"));
 app.use(express.static(__dirname + "/public"));
 
-const server = app.listen(process.env.PORT || 5000, () => {
+const server = app.listen(process.env.PORT, () => {
   console.log(
     "Express server listening on port %d in %s mode",
     server.address().port,
@@ -37,17 +39,15 @@ io.on("connection", function (socket) {
     console.log("Message: " + text);
 
     // get a reply from API.ai
-    let apiaiReq = apaiai.textRequest(text, {
-      sessionId: APIAI_SESSION_ID,
-    });
+    let apiaiReq = apiai.textRequest(text, { sessionId: APIAI_SESSION_ID });
 
-    apiai.on("response", (response) => {
-      let aiText = response.result.fullfillment.speech;
+    apiaiReq.on("response", (response) => {
+      let aiText = response.result.fulfillment.speech;
       console.log("VilaoBot reply: " + aiText);
-      socket.emit("vilaoBot reply: ", aiText);
+      socket.emit("bot reply", aiText);
     });
 
-    apiai.on("error", (error) => {
+    apiaiReq.on("error", (error) => {
       console.log(error);
     });
 
