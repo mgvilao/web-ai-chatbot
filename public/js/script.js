@@ -1,26 +1,55 @@
-// instantiate speech recognition
+const socket = io();
+
+const outputYou = document.querySelector(".output-you");
+const outputBot = document.querySelector(".output-bot");
+
 const SpeechRecognition =
   window.SpeechRecognition || window.webkitSpeechRecognition;
 const recognition = new SpeechRecognition();
 
-// instantiate socket.io
-const socket = io();
-
-// set some properties of speech recognition to costumize the experience
 recognition.lang = "en-US";
 recognition.interimResults = false;
+recognition.maxAlternatives = 1;
 
-// listen for what the user said once the button has been clicked
+// kick off speech recognition when the user clicks on the button
 document.querySelector("button").addEventListener("click", () => {
   recognition.start();
 });
 
-// transcript what was said into text
+recognition.addEventListener("speechstart", () => {
+  console.log("Speech has been detected.");
+});
+
 recognition.addEventListener("result", (e) => {
+  console.log("Result has been detected.");
+
   let last = e.results.length - 1;
   let text = e.results[last][0].transcript;
 
+  outputYou.textContent = text;
   console.log("Confidence: " + e.results[0][0].confidence);
 
   socket.emit("chat message", text);
+});
+
+recognition.addEventListener("speechend", () => {
+  recognition.stop();
+});
+
+recognition.addEventListener("error", (e) => {
+  outputBot.textContent = "Error: " + e.error;
+});
+
+function synthVoice(text) {
+  const synth = window.speechSynthesis;
+  const utterance = new SpeechSynthesisUtterance();
+  utterance.text = text;
+  synth.speak(utterance);
+}
+
+socket.on("bot reply", function (replyText) {
+  synthVoice(replyText);
+
+  if (replyText == "") replyText = "(No answer...)";
+  outputBot.textContent = replyText;
 });
